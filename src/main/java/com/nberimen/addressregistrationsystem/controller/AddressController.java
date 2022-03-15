@@ -4,12 +4,11 @@ import com.nberimen.addressregistrationsystem.dto.AddressDetailDto;
 import com.nberimen.addressregistrationsystem.dto.AddressResponseDto;
 import com.nberimen.addressregistrationsystem.dto.AddressSaveRequestDto;
 import com.nberimen.addressregistrationsystem.entity.*;
-import com.nberimen.addressregistrationsystem.service.entityservice.*;
+import com.nberimen.addressregistrationsystem.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -17,22 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressController {
 
-    private final CountryEntityService countryEntityService;
-    private final CityEntityService cityEntityService;
-    private final DistrictEntityService districtEntityService;
-    private final NeighborhoodEntityService neighborhoodEntityService;
-    private final StreetEntityService streetEntityService;
-    private final AddressEntityService addressEntityService;
+    private final AddressService addressService;
 
     //------------------------------Country-----------------------------------------
     @PostMapping("/countries")
     public ResponseEntity save(@RequestBody Country country) {
-        return ResponseEntity.ok(countryEntityService.save(country));
+        return ResponseEntity.ok(addressService.saveCuntry(country));
     }
 
     @GetMapping("/countries/{code}")
     public ResponseEntity findByCountryCode(@PathVariable String code) {
-        Country country = countryEntityService.findByCountryCode(code);
+        Country country = addressService.findByCountryCode(code);
         return ResponseEntity.ok(country);
     }
 
@@ -40,45 +34,45 @@ public class AddressController {
     //------------------------------City--------------------------------------------
     @PostMapping("/cities")
     public ResponseEntity save(@RequestBody City city) {
-        city = cityEntityService.save(city);
+        city = addressService.saveCity(city);
         return ResponseEntity.ok(city);
     }
 
     @GetMapping("/cities/{plateCode}")
     public ResponseEntity findByPlateCode(@PathVariable String plateCode) {
-        City city = cityEntityService.findByPlateCode(plateCode);
+        City city = addressService.findByPlateCode(plateCode);
         return ResponseEntity.ok(city);
     }
 
     //------------------------------District-----------------------------------------
     @PostMapping("/districts")
     public ResponseEntity save(@RequestBody District district) {
-        district = districtEntityService.save(district);
+        district = addressService.saveDistrict(district);
         return ResponseEntity.ok(district);
     }
 
     @GetMapping("/districts/{cityId}")
     public ResponseEntity findAllByCityId(@PathVariable Long cityId) {
-        List<District> districtList = districtEntityService.findAllByCityId(cityId);
+        List<District> districtList = addressService.findAllByCityId(cityId);
         return ResponseEntity.ok(districtList);
     }
 
     //------------------------------Neighborhood-----------------------------------------
     @PostMapping("/neighborhoods")
     public ResponseEntity save(@RequestBody Neighborhood neighborhood) {
-        neighborhood = neighborhoodEntityService.save(neighborhood);
+        neighborhood = addressService.saveNeighborhood(neighborhood);
         return ResponseEntity.ok(neighborhood);
     }
 
     @PatchMapping("/neighborhoods")
     public ResponseEntity updateNeighborhoodName(@RequestParam Long id, @RequestParam String name) {
-        Neighborhood neighborhood = neighborhoodEntityService.updateNeighborhoodName(id, name);
+        Neighborhood neighborhood = addressService.updateNeighborhoodName(id, name);
         return ResponseEntity.ok(neighborhood);
     }
 
     @GetMapping("/neighborhoods/{districtId}")
     public ResponseEntity findAllNeighborhoods(@PathVariable Long districtId) {
-        List<Neighborhood> neighborhoodList = neighborhoodEntityService.findAllByDistrictId(districtId);
+        List<Neighborhood> neighborhoodList = addressService.findAllNeighborhoods(districtId);
         return ResponseEntity.ok(neighborhoodList);
     }
 
@@ -86,19 +80,19 @@ public class AddressController {
     //------------------------------Street-----------------------------------------
     @PostMapping("/streets")
     public ResponseEntity save(@RequestBody Street street) {
-        street = streetEntityService.save(street);
+        street = addressService.saveStreet(street);
         return ResponseEntity.ok(street);
     }
 
     @PatchMapping("/streets")
     public ResponseEntity updateStreetName(@RequestParam Long id, @RequestParam String name) {
-        Street street = streetEntityService.updateStreetName(id, name);
+        Street street = addressService.updateStreetName(id, name);
         return ResponseEntity.ok(street);
     }
 
     @GetMapping("/streets/{neighborhoodId}")
     public ResponseEntity findAllStreets(@PathVariable Long neighborhoodId) {
-        List<Street> streetList = streetEntityService.findAllByNeighborhoodId(neighborhoodId);
+        List<Street> streetList = addressService.findAllStreets(neighborhoodId);
         return ResponseEntity.ok(streetList);
     }
 
@@ -106,26 +100,26 @@ public class AddressController {
     //------------------------------Address-----------------------------------------
     @PostMapping
     public ResponseEntity save(@RequestBody AddressSaveRequestDto addressSaveRequestDto) {
-        AddressResponseDto addressResponseDto = addressEntityService.save(addressSaveRequestDto);
+        AddressResponseDto addressResponseDto = addressService.saveAddress(addressSaveRequestDto);
 
         return ResponseEntity.ok(addressResponseDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        addressEntityService.delete(id);
+        addressService.deleteAddress(id);
         return ResponseEntity.ok(Void.TYPE);
     }
 
     @GetMapping("{id}")
     public ResponseEntity findById(@PathVariable Long id) {
-        AddressResponseDto addressResponseDto = addressEntityService.findById(id);
+        AddressResponseDto addressResponseDto = addressService.findAddressById(id);
         return ResponseEntity.ok(addressResponseDto);
     }
 
     @GetMapping("/details/{id}")
     public ResponseEntity findAddressDetails(@PathVariable Long id) {
-        AddressDetailDto addressDetailDto = addressEntityService.findAddressDetails(id);
+        AddressDetailDto addressDetailDto = addressService.findAddressDetailsById(id);
         return ResponseEntity.ok(addressDetailDto);
     }
 }

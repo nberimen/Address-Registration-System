@@ -7,7 +7,6 @@ import com.nberimen.addressregistrationsystem.dto.AddressSaveRequestDto;
 import com.nberimen.addressregistrationsystem.entity.Address;
 import com.nberimen.addressregistrationsystem.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
